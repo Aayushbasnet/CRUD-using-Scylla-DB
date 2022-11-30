@@ -1,16 +1,17 @@
 import { IsEmail, IsString } from "class-validator";
 
-export class CreateUserDto{
+export class CreateEmailDto {
     @IsString()
-    first_name:string;
+    subject:string;
 
     @IsString()
-    last_name:string;
-
     @IsEmail()
-    @IsString()
-    email:string;
+    from:string;
 
     @IsString()
-    phone_number:string;
+    @IsEmail()
+    to:string;
+
+    @IsString()
+    body:string;
 }

@@ -2,38 +2,39 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { mapping } from 'cassandra-driver';
 import { CassandraService } from 'src/common/cassandra/cassandra.service';
-import { User } from 'src/user/model/user.model';
+import { Email } from '../entities/email.entity';
+
 @Injectable()
-export class UserDbRepository implements OnModuleInit {
+export class EmailDbRepository implements OnModuleInit {
    constructor(private cassandraService: CassandraService) {}
 
-    userMapper: mapping.ModelMapper<User>;
+    userMapper: mapping.ModelMapper<Email>;
 
     onModuleInit() {
         const mappingOptions: mapping.MappingOptions = {
             models: {
-                'User': {
-                    tables: ['user'],
+                'Email': {
+                    tables: ['email'],
                     mappings: new mapping.UnderscoreCqlToCamelCaseMappings()
                 }
             }
         }
 
-        this.userMapper = this.cassandraService.createMapper(mappingOptions).forModel('User');
+        this.userMapper = this.cassandraService.createMapper(mappingOptions).forModel('Email');
     }
 
-    async findAll(): Promise<User[]>{
+    async findAll(): Promise<Email[]>{
         const response = (await this.userMapper.findAll()).toArray(); 
         return response;
 
     }
 
-    async findOne(id:string):Promise<User> {
+    async findOne(id:string):Promise<Email> {
         const response =  (await this.userMapper.find({id})).first();
         return response;
     }
 
-    async insert(body:User):Promise<User>{
+    async create(body:Email):Promise<Email>{
         await this.userMapper.insert(body);
         return body;
     }
